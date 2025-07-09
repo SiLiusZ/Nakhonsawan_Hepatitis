@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เข้าสู่ระบบสำหรับ Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'IBM Plex Sans Thai', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-container h2 {
+            margin-bottom: 25px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .form-group input[type="email"],
+        .form-group input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+            box-sizing: border-box;
+            /* Include padding in width */
+        }
+
+        .form-group input[type="email"]:focus,
+        .form-group input[type="password"]:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        .login-button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+
+        .login-button:hover {
+            background-color: #0056b3;
+        }
+
+        .error-message {
+            color: #dc3545;
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <h2>เข้าสู่ระบบสำหรับ Admin</h2>
+        <form id="adminLoginForm">
+            <div class="form-group">
+                <label for="email">อีเมล:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">รหัสผ่าน:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="login-button">เข้าสู่ระบบ</button>
+            <p id="errorMessage" class="error-message"></p>
+        </form>
+    </div>
+
+    <!-- Firebase SDK Scripts -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAcObi7dd4lRB1py3i6xqm3GZ7-82Bskto",
+            authDomain: "nakhonsawanhepatitis.firebaseapp.com",
+            projectId: "nakhonsawanhepatitis",
+            storageBucket: "nakhonsawanhepatitis.firebasestorage.app",
+            messagingSenderId: "597233826556",
+            appId: "1:597233826556:web:ab583f4202eaaef0003579",
+            measurementId: "G-GE5H1739WX"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app); // Initialize Analytics
+        const auth = getAuth(app); // Get the Auth service
+
+        document.getElementById('adminLoginForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = ''; // Clear previous error message
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // Signed in successfully
+                    const user = userCredential.user;
+                    console.log("Logged in user:", user.email);
+                    window.location.href = 'admin_dashboard.html'; // Redirect to admin dashboard
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const message = error.message;
+                    console.error("Login Error:", errorCode, message);
+                    let displayMessage = 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ';
+
+                    if (errorCode === 'auth/invalid-email') {
+                        displayMessage = 'รูปแบบอีเมลไม่ถูกต้อง';
+                    } else if (errorCode === 'auth/user-disabled') {
+                        displayMessage = 'บัญชีผู้ใช้นี้ถูกระงับ';
+                    } else if (errorCode === 'auth/user-not-found' || errorCode === 'auth/wrong-password') {
+                        displayMessage = 'อีเมลหรือรหัสผ่านไม่ถูกต้อง';
+                    } else if (errorCode === 'auth/too-many-requests') {
+                        displayMessage = 'มีการพยายามเข้าสู่ระบบมากเกินไป กรุณาลองใหม่ในภายหลัง';
+                    }
+                    errorMessage.textContent = displayMessage;
+                });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แบบฟอร์มรายงานผลการดำเนินงาน</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'IBM Plex Sans Thai', sans-serif;
+            margin: 0;
+            background-color: #f0f2f5;
+            padding-bottom: 50px;
+        }
+
+        .navbar {
+            background-color: #007bff;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar .title {
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 1.8em;
+            color: #333;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+        }
+
+        .form-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .form-section h2 {
+            font-size: 1.3em;
+            color: #007bff;
+            margin-bottom: 15px;
+            padding-left: 5px;
+            border-left: 4px solid #007bff;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 0.95em;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        .form-group input[type="date"],
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: 'IBM Plex Sans Thai', sans-serif;
+            font-size: 1em;
+            box-sizing: border-box;
+            /* Include padding in width calculation */
+        }
+
+        .form-group select {
+            appearance: none;
+            /* Remove default arrow */
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20256%20512%22%3E%3Cpath%20fill%3D%22%23666%22%20d%3D%22M192%20256L64%20128v256l128-128z%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 12px;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .form-actions button {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .form-actions button[type="submit"] {
+            background-color: #28a745;
+            /* Green for submit */
+            color: white;
+        }
+
+        .form-actions button[type="submit"]:hover {
+            background-color: #218838;
+        }
+
+        .form-actions button[type="button"] {
+            /* For Cancel or Back */
+            background-color: #6c757d;
+            /* Grey */
+            color: white;
+        }
+
+        .form-actions button[type="button"]:hover {
+            background-color: #5a6268;
+        }
+
+        /* Message box styling */
+        .message-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            text-align: center;
+            display: none;
+            /* Hidden by default */
+            max-width: 300px;
+            width: 90%;
+        }
+
+        .message-box h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .message-box p {
+            margin-bottom: 20px;
+            color: #555;
+        }
+
+        .message-box button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        .message-box button:hover {
+            background-color: #0056b3;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+            /* Hidden by default */
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .container {
+                margin: 15px;
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            .form-section h2 {
+                font-size: 1.2em;
+            }
+
+            .form-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="title">
+            ระบบรายงานผลการคัดกรองและรักษาไวรัสตับอักเสบ<br>สำนักงานสาธารณสุขจังหวัดนครสวรรค์
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>แบบฟอร์มรายงานผลการดำเนินงาน<br>คัดกรองและรักษาไวรัสตับอักเสบ บี และ ซี จังหวัดนครสวรรค์ ปี 2568</h1>
+
+        <form id="reportForm">
+            <div class="form-group">
+                <label for="reportDate">วันที่บันทึก</label>
+                <input type="date" id="reportDate" name="reportDate" required>
+            </div>
+
+            <div class="form-group">
+                <label for="reportMonth">เดือนที่รายงาน</label>
+                <select id="reportMonth" name="reportMonth" required>
+                    <option value="">เลือกเดือน</option>
+                    <option value="1">มกราคม</option>
+                    <option value="2">กุมภาพันธ์</option>
+                    <option value="3">มีนาคม</option>
+                    <option value="4">เมษายน</option>
+                    <option value="5">พฤษภาคม</option>
+                    <option value="6">มิถุนายน</option>
+                    <option value="7">กรกฎาคม</option>
+                    <option value="8">สิงหาคม</option>
+                    <option value="9">กันยายน</option>
+                    <option value="10">ตุลาคม</option>
+                    <option value="11">พฤศจิกายน</option>
+                    <option value="12">ธันวาคม</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="district">อำเภอ</label>
+                <select id="district" name="district" required>
+                    <option value="">เลือกอำเภอ</option>
+                    <option value="เมืองนครสวรรค์">เมืองนครสวรรค์</option>
+                    <option value="โกรกพระ">โกรกพระ</option>
+                    <option value="ชุมแสง">ชุมแสง</option>
+                    <option value="หนองบัว">หนองบัว</option>
+                    <option value="บรรพตพิสัย">บรรพตพิสัย</option>
+                    <option value="เก้าเลี้ยว">เก้าเลี้ยว</option>
+                    <option value="ตาคลี">ตาคลี</option>
+                    <option value="ท่าตะโก">ท่าตะโก</option>
+                    <option value="ไพศาลี">ไพศาลี</option>
+                    <option value="พยุหะคีรี">พยุหะคีรี</option>
+                    <option value="ลาดยาว">ลาดยาว</option>
+                    <option value="ตากฟ้า">ตากฟ้า</option>
+                    <option value="แม่วงก์">แม่วงก์</option>
+                    <option value="แม่เปิน">แม่เปิน</option>
+                    <option value="ชุมตาบง">ชุมตาบง</option>
+                </select>
+            </div>
+
+            <div class="form-section">
+                <h2>ข้อมูลการคัดกรอง</h2>
+                <div class="form-group">
+                    <label for="hbvScreening">1.1 จำนวนตรวจคัดกรอง HBV (ไวรัสตับอักเสบ บี) (รหัสคัดกรอง 1B010)</label>
+                    <input type="number" id="hbvScreening" name="hbvScreening" min="0" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="hcvScreening">1.2 จำนวนตรวจคัดกรอง HCV (ไวรัสตับอักเสบ ซี) (รหัสคัดกรอง 1B011)</label>
+                    <input type="number" id="hcvScreening" name="hcvScreening" min="0" value="0">
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>ผลการตรวจคัดกรอง</h2>
+                <div class="form-group">
+                    <label for="hbvPositive">2.1 จำนวนตรวจคัดกรอง HBV ได้ผลเป็นบวก (รหัส 1B0100)</label>
+                    <input type="number" id="hbvPositive" name="hbvPositive" min="0" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="hcvPositive">2.2 จำนวนผลคัดกรอง HCV (anti-HCV) ได้ผลเป็นบวก</label>
+                    <input type="number" id="hcvPositive" name="hcvPositive" min="0" value="0">
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>ติดตามและรักษา</h2>
+                <div class="form-group">
+                    <label for="hbvLiverAssessment">3.1 เป็นจำนวนผู้ติดเชื้อ HBV
+                        ส่งพบแพทย์/ส่งตรวจประเมินภาวะความรุนแรงของตับ</label>
+                    <input type="number" id="hbvLiverAssessment" name="hbvLiverAssessment" min="0" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="hcvViralLoadTest">3.2 จำนวนส่งตรวจ HCV viral load หรือ HCV core</label>
+                    <input type="number" id="hcvViralLoadTest" name="hcvViralLoadTest" min="0" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="hcvDetect">3.3 จำนวนผู้ติดเชื้อ HCV (HCV viral load หรือ HCV CoreAg ผล detect)</label>
+                    <input type="number" id="hcvDetect" name="hcvDetect" min="0" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="hcvTreated">3.4 ผู้ติดเชื้อ HCV ได้รับการรักษา</label>
+                    <input type="number" id="hcvTreated" name="hcvTreated" min="0" value="0">
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>ข้อมูลหน่วยงาน</h2>
+                <div class="form-group">
+                    <label for="reportingUnit">4.1 ชื่อหน่วยงาน</label>
+                    <!-- Changed from input type="text" to select dropdown -->
+                    <select id="reportingUnit" name="reportingUnit" required>
+                        <option value="">เลือกหน่วยงาน</option>
+                        <option value="โรงพยาบาลสวรรค์ประชารักษ์">โรงพยาบาลสวรรค์ประชารักษ์</option>
+                        <option value="โรงพยาบาลโกรกพระ">โรงพยาบาลโกรกพระ</option>
+                        <option value="โรงพยาบาลชุมแสง">โรงพยาบาลชุมแสง</option>
+                        <option value="โรงพยาบาลหนองบัว">โรงพยาบาลหนองบัว</option>
+                        <option value="โรงพยาบาลบรรพตพิสัย">โรงพยาบาลบรรพตพิสัย</option>
+                        <option value="โรงพยาบาลเก้าเลี้ยว">โรงพยาบาลเก้าเลี้ยว</option>
+                        <option value="โรงพยาบาลตาคลี">โรงพยาบาลตาคลี</option>
+                        <option value="โรงพยาบาลท่าตะโก">ท่าตะโก</option>
+                        <option value="โรงพยาบาลไพศาลี">โรงพยาบาลไพศาลี</option>
+                        <option value="โรงพยาบาลพยุหะคีรี">โรงพยาบาลพยุหะคีรี</option>
+                        <option value="โรงพยาบาลลาดยาว">โรงพยาบาลลาดยาว</option>
+                        <option value="โรงพยาบาลตากฟ้า">โรงพยาบาลตากฟ้า</option>
+                        <option value="โรงพยาบาลแม่วงก์">โรงพยาบาลแม่วงก์</option>
+                        <option value="โรงพยาบาลแม่เปิน">โรงพยาบาลแม่เปิน</option>
+                        <option value="โรงพยาบาลชุมตาบง">โรงพยาบาลชุมตาบง</option>
+                        <option value="สำนักงานสาธารณสุขอำเภอเมืองนครสวรรค์">สำนักงานสาธารณสุขอำเภอเมืองนครสวรรค์
+                        </option>
+                        <option value="สำนักงานสาธารณสุขอำเภอโกรกพระ">สำนักงานสาธารณสุขอำเภอโกรกพระ</option>
+                        <option value="สำนักงานสาธารณสุขอำเภอชุมแสง">สำนักงานสาธารณสุขอำเภอชุมแสง</option>
+                        <option value="สำนักงานสาธารณสุขอำเภอหนองบัว">สำนักงานสาธารณสุขอำเภอหนองบัว</option>
+                        <option value="สำนักงานสาธารณสุขอำเภอบรรพตพิสัย">สำนักงานสาธารณณสุขอำเภอบรรพตพิสัย</option>
+                        <option value="สำนักงานสาธารณสุขอำเภอเก้าเลี้ยว">สำนักงานสาธารณสุขอำเภอเก้าเลี้ยว</option>
+                        <option value="สำนักงานสาธารณสุขอำเภอตาคลี">สำนักงานสาธารณสุขอำเภอตาคลี</option>
+                        <option value="สำนักงานสาธารณสุขอำเภอท่าตะโก">สำนักงานสาธารณสุขอำเภอท่าตะโก</option>
+                        <option value="สำนักงานสาธารณสุขอำเภอไพศาลี">สำนักงานสาธารณสุขอำเภอไพศาลี</option>
+                        <option value="สำนักงานสาธารณสุขอำเภอพยุหะคีรี">สำนักงานสาธารณสุขอำเภอพยุหะคีรี</option>
+                        <option value="สำนักงานสาธารณสุขอำเภอลาดยาว">สำนักงานสาธารณสุขอำเภอลาดยาว</option>
+                        <option value="สำนักงานสาธารณสุขอำเภอตากฟ้า">สำนักงานสาธารณสุขอำเภอตาคลี</option>
+                        <option value="สำนักงานสาธารณสุขอำเภอแม่วงก์">สำนักงานสาธารณสุขอำเภอแม่วงก์</option>
+                        <option value="สำนักงานสาธารณสุขอำเภอแม่เปิน">สำนักงานสาธารณสุขอำเภอแม่เปิน</option>
+                        <option value="สำนักงานสาธารณสุขอำเภอชุมตาบง">สำนักงานสาธารณสุขอำเภอชุมตาบง</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" onclick="window.history.back()">ย้อนกลับ</button>
+                <button type="submit">บันทึกข้อมูล</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Custom Message Box -->
+    <div class="overlay" id="overlay"></div>
+    <div class="message-box" id="messageBox">
+        <h3 id="messageTitle"></h3>
+        <p id="messageContent"></p>
+        <button id="messageBoxOk">ตกลง</button>
+    </div>
+
+    <!-- Firebase SDK Scripts -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
+        import { getAuth, onAuthStateChanged, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // IMPORTANT: Use the global variables provided by the Canvas environment for Firebase config and auth.
+        // DO NOT hardcode firebaseConfig if running in Canvas.
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+            apiKey: "AIzaSyAcObi7dd4lRB1py3i6xqm3GZ7-82Bskto",
+            authDomain: "nakhonsawanhepatitis.firebaseapp.com",
+            projectId: "nakhonsawanhepatitis",
+            storageBucket: "nakhonsawanhepatitis.firebasestorage.app",
+            messagingSenderId: "597233826556",
+            appId: "1:597233826556:web:ab583f4202eaaef0003579",
+            measurementId: "G-GE5H1739WX"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app); // Initialize Analytics
+        const db = getFirestore(app); // Get the Firestore service
+        const auth = getAuth(app); // Get the Auth service
+
+        // Custom Message Box functions (replacing alert)
+        function showMessageBox(title, message, callback) {
+            document.getElementById('messageTitle').textContent = title;
+            document.getElementById('messageContent').textContent = message;
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('messageBox').style.display = 'block';
+            document.getElementById('messageBoxOk').onclick = () => {
+                document.getElementById('overlay').style.display = 'none';
+                document.getElementById('messageBox').style.display = 'none';
+                if (callback) callback();
+            };
+        }
+
+        let isAuthReady = false; // Flag to indicate if auth state has been checked
+
+        // Listen for authentication state changes
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // User is signed in
+                console.log("User is logged in:", user.email || "Anonymous", "UID:", user.uid);
+                isAuthReady = true;
+                // You can enable form elements here if they were disabled by default
+            } else {
+                // User is signed out or not authenticated.
+                // Attempt to sign in with custom token if available (Canvas environment)
+                // Otherwise, sign in anonymously or redirect to login.
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    try {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                        console.log("Signed in with custom token.");
+                    } catch (error) {
+                        console.error("Error signing in with custom token:", error);
+                        // Fallback to anonymous or redirect if custom token fails
+                        await signInAnonymously(auth);
+                        console.log("Signed in anonymously as custom token failed.");
+                    }
+                } else {
+                    // If no custom token, sign in anonymously for Canvas or redirect for self-hosted
+                    await signInAnonymously(auth);
+                    console.log("Signed in anonymously as no custom token was provided.");
+                }
+                isAuthReady = true; // Auth state has been processed
+                console.log("No user logged in or initial token used. Redirecting to admin_login.html if not in Canvas context.");
+                // For self-hosted apps, you would redirect here:
+                // window.location.href = 'admin_login.html';
+                // In Canvas, anonymous sign-in might be sufficient for some operations,
+                // but for 'write: if request.auth != null', a proper authenticated user is needed.
+                // If this is an admin page, always redirect if not a proper user.
+                if (!user && typeof __initial_auth_token === 'undefined') { // Only redirect if not in Canvas with token
+                    showMessageBox('เข้าสู่ระบบ', 'คุณไม่มีสิทธิ์เข้าถึงหน้านี้ กรุณาเข้าสู่ระบบ', () => {
+                        window.location.href = 'admin_login.html';
+                    });
+                }
+            }
+        });
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Set current date as default for reportDate
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0'); // Months start at 0!
+            const dd = String(today.getDate()).padStart(2, '0');
+            document.getElementById('reportDate').value = `${yyyy}-${mm}-${dd}`;
+
+            // Handle form submission
+            document.getElementById('reportForm').addEventListener('submit', async function (event) {
+                event.preventDefault(); // Prevent default form submission
+
+                // Ensure authentication state is ready before proceeding
+                if (!isAuthReady) {
+                    showMessageBox('กำลังตรวจสอบสิทธิ์', 'กรุณารอสักครู่ กำลังตรวจสอบสถานะการเข้าสู่ระบบ...');
+                    return;
+                }
+
+                // Double check if a user is actually logged in before attempting to write
+                if (!auth.currentUser) {
+                    showMessageBox('สิทธิ์ไม่เพียงพอ', 'คุณต้องเข้าสู่ระบบเพื่อบันทึกข้อมูลนี้', () => {
+                        window.location.href = 'admin_login.html';
+                    });
+                    return;
+                }
+
+                const district = document.getElementById('district').value;
+                const reportMonth = document.getElementById('reportMonth').value;
+                const reportingUnit = document.getElementById('reportingUnit').value; // Get value from the new select
+
+                if (!district || !reportMonth || !reportingUnit) { // Added reportingUnit check
+                    showMessageBox('ข้อผิดพลาด', 'กรุณาเลือกอำเภอ, เดือนที่รายงาน และชื่อหน่วยงานให้ครบถ้วน');
+                    return;
+                }
+
+                // Fetch the screening target for the selected district from Firestore
+                let screeningTargetForDistrict = 0;
+                try {
+                    const targetDocRef = doc(db, 'targets', district);
+                    const docSnap = await getDoc(targetDocRef);
+                    if (docSnap.exists()) {
+                        screeningTargetForDistrict = docSnap.data().target || 0;
+                    } else {
+                        showMessageBox('ข้อมูลเป้าหมายไม่พบ', `ไม่พบข้อมูลเป้าหมายการคัดกรองสำหรับอำเภอ ${district} จะใช้ค่า 0 เป็นเป้าหมาย`);
+                    }
+                } catch (error) {
+                    console.error("Error fetching screening target:", error);
+                    showMessageBox('ข้อผิดพลาด', `เกิดข้อผิดพลาดในการดึงข้อมูลเป้าหมาย: ${error.message}`);
+                    return;
+                }
+
+                const formData = {
+                    reportDate: document.getElementById('reportDate').value,
+                    reportMonth: reportMonth, // Store as number for consistency
+                    district: district,
+                    hbvScreening: parseInt(document.getElementById('hbvScreening').value) || 0,
+                    hcvScreening: parseInt(document.getElementById('hcvScreening').value) || 0,
+                    // Use the fetched target
+                    screeningTarget: screeningTargetForDistrict,
+                    hbvPositive: parseInt(document.getElementById('hbvPositive').value) || 0,
+                    hcvPositive: parseInt(document.getElementById('hcvPositive').value) || 0,
+                    hbvLiverAssessment: parseInt(document.getElementById('hbvLiverAssessment').value) || 0,
+                    hcvViralLoadTest: parseInt(document.getElementById('hcvViralLoadTest').value) || 0,
+                    hcvDetect: parseInt(document.getElementById('hcvDetect').value) || 0,
+                    hcvTreated: parseInt(document.getElementById('hcvTreated').value) || 0,
+                    reportingUnit: reportingUnit, // Use the value from the select
+                    timestamp: new Date().toISOString() // Add a timestamp for ordering/tracking
+                };
+
+                // Calculate percentages before saving (matching index.html's logic for consistency)
+                const hbvPositive = formData.hbvPositive;
+                const hcvPositive = formData.hcvPositive;
+                const hcvViralLoadTest = formData.hcvViralLoadTest;
+
+                let percentageHbvLiverAssessment = (hbvPositive > 0) ? ((formData.hbvLiverAssessment / hbvPositive) * 100) : 0;
+                if (percentageHbvLiverAssessment > 100) percentageHbvLiverAssessment = 100;
+
+                let percentageHcvViralLoadTest = (hcvPositive > 0) ? ((hcvViralLoadTest / hcvPositive) * 100) : 0;
+                if (percentageHcvViralLoadTest > 100) percentageHcvViralLoadTest = 100;
+
+                let percentageHcvTreated = (hcvViralLoadTest > 0) ? ((formData.hcvTreated / hcvViralLoadTest) * 100) : 0;
+                if (percentageHcvTreated > 100) percentageHcvTreated = 100;
+
+                // Add percentages to formData for saving
+                formData.percentage_hbv_liver_assessment = parseFloat(percentageHbvLiverAssessment.toFixed(2));
+                formData.percentage_hcv_viral_load_test = parseFloat(percentageHcvViralLoadTest.toFixed(2));
+                formData.percentage_hcv_treated = parseFloat(percentageHcvTreated.toFixed(2));
+
+                try {
+                    // Add a new document to the 'reports' collection
+                    // We use addDoc here to let Firestore generate a unique ID for each report
+                    await addDoc(collection(db, 'reports'), formData);
+
+                    showMessageBox('บันทึกสำเร็จ', 'บันทึกข้อมูลเรียบร้อยแล้ว!', () => {
+                        window.location.href = 'index.html'; // Redirect back to dashboard
+                    });
+                } catch (error) {
+                    console.error("Error saving report data:", error);
+                    showMessageBox('ข้อผิดพลาด', `เกิดข้อผิดพลาดในการบันทึกข้อมูล: ${error.message}`);
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

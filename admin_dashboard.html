@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - กรอกข้อมูลเป้าหมาย</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'IBM Plex Sans Thai', sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .navbar {
+            background-color: #007bff;
+            /* Blue color from the image */
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .navbar .title {
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        .navbar .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 500;
+        }
+
+        .navbar .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 20px auto;
+        }
+
+        .container h2 {
+            margin-bottom: 25px;
+            color: #333;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .form-group select,
+        .form-group input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+
+        .form-group input[type="number"]:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        .submit-button {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            margin-top: 20px;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-button:hover {
+            background-color: #218838;
+        }
+
+        .message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .logout-button {
+            background-color: #dc3545;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.3s ease;
+        }
+
+        .logout-button:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="navbar">
+        <div class="title">Admin Dashboard</div>
+        <div class="nav-links">
+            <a href="index.html">หน้าหลัก</a>
+            <a href="add_report.html">เพิ่มรายงาน</a>
+            <button id="logoutButton" class="logout-button">ออกจากระบบ</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>กรอกข้อมูลเป้าหมายการคัดกรองรายอำเภอ</h2>
+        <form id="adminDashboardForm">
+            <div class="form-group">
+                <label for="district">อำเภอ:</label>
+                <select id="district" name="district" required>
+                    <option value="">เลือกอำเภอ</option>
+                    <option value="เมืองนครสวรรค์">เมืองนครสวรรค์</option>
+                    <option value="โกรกพระ">โกรกพระ</option>
+                    <option value="ชุมแสง">ชุมแสง</option>
+                    <option value="หนองบัว">หนองบัว</option>
+                    <option value="บรรพตพิสัย">บรรพตพิสัย</option>
+                    <option value="เก้าเลี้ยว">เก้าเลี้ยว</option>
+                    <option value="ตาคลี">ตาคลี</option>
+                    <option value="ท่าตะโก">ท่าตะโก</option>
+                    <option value="ไพศาลี">ไพศาลี</option>
+                    <option value="พยุหะคีรี">พยุหะคีรี</option>
+                    <option value="ลาดยาว">ลาดยาว</option>
+                    <option value="ตากฟ้า">ตากฟ้า</option>
+                    <option value="แม่วงก์">แม่วงก์</option>
+                    <option value="แม่เปิน">แม่เปิน</option>
+                    <option value="ชุมตาบง">ชุมตาบง</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="district_screening_target">เป้าหมายการคัดกรองรายอำเภอ:</label>
+                <input type="number" id="district_screening_target" name="district_screening_target" min="0" required>
+            </div>
+            <button type="submit" class="submit-button">บันทึกข้อมูลเป้าหมาย</button>
+            <p id="formMessage" class="message"></p>
+        </form>
+    </div>
+
+    <!-- Firebase SDK Scripts -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAcObi7dd4lRB1py3i6xqm3GZ7-82Bskto",
+            authDomain: "nakhonsawanhepatitis.firebaseapp.com",
+            projectId: "nakhonsawanhepatitis",
+            storageBucket: "nakhonsawanhepatitis.firebasestorage.app",
+            messagingSenderId: "597233826556",
+            appId: "1:597233826556:web:ab583f4202eaaef0003579",
+            measurementId: "G-GE5H1739WX"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app); // Initialize Analytics
+        const auth = getAuth(app);
+        const db = getFirestore(app); // Get the Firestore service
+
+        // Check if user is logged in, if not, redirect to login page
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = 'admin_login.html'; // Redirect if not logged in
+            }
+        });
+
+        // Logout functionality
+        document.getElementById('logoutButton').addEventListener('click', () => {
+            signOut(auth).then(() => {
+                console.log("User signed out.");
+                window.location.href = 'admin_login.html'; // Redirect to login page after logout
+            }).catch((error) => {
+                console.error("Error signing out: ", error);
+                alert("เกิดข้อผิดพลาดในการออกจากระบบ"); // Consider a custom modal instead of alert
+            });
+        });
+
+        // Get DOM elements
+        const districtSelect = document.getElementById('district');
+        const districtScreeningTargetInput = document.getElementById('district_screening_target');
+        const adminDashboardForm = document.getElementById('adminDashboardForm');
+        const formMessage = document.getElementById('formMessage');
+
+        // Function to fetch target data for selected district
+        async function fetchTargetData(selectedDistrict) {
+            if (!selectedDistrict) {
+                districtScreeningTargetInput.value = '';
+                formMessage.textContent = '';
+                formMessage.className = 'message';
+                return;
+            }
+
+            try {
+                // Get a reference to the specific district's target document
+                const targetDocRef = doc(db, 'targets', selectedDistrict);
+                const docSnap = await getDoc(targetDocRef);
+
+                if (docSnap.exists()) {
+                    // Document exists, populate the input field with its target value
+                    const data = docSnap.data();
+                    districtScreeningTargetInput.value = data.target || '';
+                    formMessage.textContent = ''; // Clear message on success
+                    formMessage.className = 'message';
+                } else {
+                    // Document does not exist, clear the input field
+                    districtScreeningTargetInput.value = '';
+                    formMessage.textContent = 'ไม่มีข้อมูลเป้าหมายสำหรับอำเภอนี้ กรุณากรอกข้อมูล';
+                    formMessage.className = 'message success'; // ใช้ success เพื่อให้ข้อความดูไม่เหมือน error
+                }
+            } catch (error) {
+                console.error("Error fetching target data:", error);
+                formMessage.textContent = 'เกิดข้อผิดพลาดในการดึงข้อมูล: ' + error.message;
+                formMessage.className = 'message error';
+                districtScreeningTargetInput.value = '';
+            }
+        }
+
+        // Event listener for district dropdown change
+        districtSelect.addEventListener('change', function () {
+            fetchTargetData(this.value);
+        });
+
+        // Event listener for form submission
+        adminDashboardForm.addEventListener('submit', async function (event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const district = districtSelect.value;
+            const target = parseInt(districtScreeningTargetInput.value); // Ensure it's a number
+
+            if (!district || isNaN(target)) {
+                formMessage.textContent = 'กรุณาเลือกอำเภอและกรอกเป้าหมายให้ถูกต้อง';
+                formMessage.className = 'message error';
+                return;
+            }
+
+            try {
+                // Set the document in 'targets' collection with district as ID
+                // setDoc will create the document if it doesn't exist, or overwrite it if it does
+                await setDoc(doc(db, 'targets', district), {
+                    target: target,
+                    lastUpdated: new Date().toISOString() // Optional: add a timestamp
+                });
+
+                formMessage.textContent = `บันทึกข้อมูลเป้าหมายของอำเภอ ${district} เรียบร้อยแล้ว!`;
+                formMessage.className = 'message success';
+
+                // Clear input after successful save (optional, depends on desired flow)
+                // districtScreeningTargetInput.value = ''; 
+                // districtSelect.value = ''; // หรืออาจจะเลือกอำเภอเดิมค้างไว้ เพื่อกรอกซ้ำได้ง่าย
+
+                setTimeout(() => {
+                    formMessage.textContent = '';
+                    formMessage.className = 'message';
+                }, 3000);
+
+            } catch (error) {
+                console.error("Error saving target data:", error);
+                formMessage.textContent = 'เกิดข้อผิดพลาดในการบันทึกข้อมูล: ' + error.message;
+                formMessage.className = 'message error';
+            }
+        });
+
+        // Initialize target data when page loads if a district is pre-selected (unlikely with "เลือกอำเภอ" as default)
+        // You might want to call fetchTargetData(districtSelect.value) here if you have a default selected district
+    </script>
+</body>
+
+</html>
