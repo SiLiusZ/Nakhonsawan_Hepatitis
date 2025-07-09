@@ -388,11 +388,11 @@
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
-        import { getAuth, onAuthStateChanged, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        // Removed getAuth, onAuthStateChanged, signInWithCustomToken, signInAnonymously as login is no longer required for this page
         import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        // IMPORTANT: Use the global variables provided by the Canvas environment for Firebase config and auth.
-        // DO NOT hardcode firebaseConfig if running in Canvas.
+        // IMPORTANT: Use the global variables provided by the Canvas environment for Firebase config.
+        // We no longer need __initial_auth_token or auth related functions for this page if rules are open.
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
             apiKey: "AIzaSyAcObi7dd4lRB1py3i6xqm3GZ7-82Bskto",
             authDomain: "nakhonsawanhepatitis.firebaseapp.com",
@@ -407,7 +407,8 @@
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app); // Initialize Analytics
         const db = getFirestore(app); // Get the Firestore service
-        const auth = getAuth(app); // Get the Auth service
+        // Removed Auth initialization as login is no longer required for this page
+        // const auth = getAuth(app); 
 
         // Custom Message Box functions (replacing alert)
         function showMessageBox(title, message, callback) {
@@ -422,49 +423,37 @@
             };
         }
 
-        let isAuthReady = false; // Flag to indicate if auth state has been checked
-
-        // Listen for authentication state changes
+        // Removed onAuthStateChanged check and related auth logic as login is no longer required for this page
+        /*
+        let isAuthReady = false;
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                // User is signed in
                 console.log("User is logged in:", user.email || "Anonymous", "UID:", user.uid);
                 isAuthReady = true;
-                // You can enable form elements here if they were disabled by default
             } else {
-                // User is signed out or not authenticated.
-                // Attempt to sign in with custom token if available (Canvas environment)
-                // Otherwise, sign in anonymously or redirect to login.
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                     try {
                         await signInWithCustomToken(auth, __initial_auth_token);
                         console.log("Signed in with custom token.");
                     } catch (error) {
                         console.error("Error signing in with custom token:", error);
-                        // Fallback to anonymous or redirect if custom token fails
                         await signInAnonymously(auth);
                         console.log("Signed in anonymously as custom token failed.");
                     }
                 } else {
-                    // If no custom token, sign in anonymously for Canvas or redirect for self-hosted
                     await signInAnonymously(auth);
                     console.log("Signed in anonymously as no custom token was provided.");
                 }
-                isAuthReady = true; // Auth state has been processed
+                isAuthReady = true;
                 console.log("No user logged in or initial token used. Redirecting to admin_login.html if not in Canvas context.");
-                // For self-hosted apps, you would redirect here:
-                // window.location.href = 'admin_login.html';
-                // In Canvas, anonymous sign-in might be sufficient for some operations,
-                // but for 'write: if request.auth != null', a proper authenticated user is needed.
-                // If this is an admin page, always redirect if not a proper user.
-                if (!user && typeof __initial_auth_token === 'undefined') { // Only redirect if not in Canvas with token
+                if (!user && typeof __initial_auth_token === 'undefined') {
                     showMessageBox('เข้าสู่ระบบ', 'คุณไม่มีสิทธิ์เข้าถึงหน้านี้ กรุณาเข้าสู่ระบบ', () => {
                         window.location.href = 'admin_login.html';
                     });
                 }
             }
         });
-
+        */
 
         document.addEventListener('DOMContentLoaded', function () {
             // Set current date as default for reportDate
@@ -478,19 +467,19 @@
             document.getElementById('reportForm').addEventListener('submit', async function (event) {
                 event.preventDefault(); // Prevent default form submission
 
-                // Ensure authentication state is ready before proceeding
+                // Removed authentication checks as login is no longer required for this page
+                /*
                 if (!isAuthReady) {
                     showMessageBox('กำลังตรวจสอบสิทธิ์', 'กรุณารอสักครู่ กำลังตรวจสอบสถานะการเข้าสู่ระบบ...');
                     return;
                 }
-
-                // Double check if a user is actually logged in before attempting to write
                 if (!auth.currentUser) {
                     showMessageBox('สิทธิ์ไม่เพียงพอ', 'คุณต้องเข้าสู่ระบบเพื่อบันทึกข้อมูลนี้', () => {
                         window.location.href = 'admin_login.html';
                     });
                     return;
                 }
+                */
 
                 const district = document.getElementById('district').value;
                 const reportMonth = document.getElementById('reportMonth').value;
